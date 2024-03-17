@@ -30,12 +30,6 @@ computeAPNCU <- function(mpcb, uprevis, combgest) {
   }
 }
 
-
-# Example Usage:
-# computeAPNCU(mpcb, uprevis, combgest)
-# Replace mpcb, uprevis, combgest with your actual data values
-
-
 computeAPNCU1M <- function(mpcb, uprevis, combgest) {
   if (is.na(mpcb) || is.na(uprevis) || is.na(combgest)) {
     return(NA)
@@ -103,23 +97,18 @@ computeAPNCU2M <- function(mpcb, uprevis, combgest) {
   }
 }
 
-# Usage:
-# computeAPNCU1M(mpcb, uprevis, combgest)
-# computeAPNCU2M(mpcb, uprevis, combgest)
-# Replace mpcb, uprevis, combgest with actual data values
-
 
 # Load the necessary library
 library(readr)
 library(dplyr)
 
 # Read the data
-natl2003 <- read_csv("natl2003.csv")
-#natl2003 <- read_csv("linkco2003us_den.csv")
+# natl2003 <- read_csv("natl2003.csv")
+natl2003 <- read_csv("linkco2003us_den.csv")
 
 # Keep only selected variables
 natl2003 <- natl2003 %>%
-  select(mager41, dmeduc, mracerec, mar, mpcb, uprevis, urf_eclam, combgest, tobuse, alcohol, mracehisp)
+  select(mager41, dmeduc, mracerec, mar, mpcb, uprevis, urf_eclam, combgest, tobuse, cigs, mracehisp)
 
 count(natl2003)
 natl2003 <- na.omit(natl2003)
@@ -127,17 +116,14 @@ count(natl2003)
 
 # Treat certain values as missing
 natl2003$tobuse[natl2003$tobuse == 9] <- NA
-natl2003$alcohol[natl2003$alcohol == 9] <- NA
+natl2003$cigs[natl2003$cigs == 99] <- NA
 natl2003$mar[natl2003$mar == 9] <- NA
 natl2003$dmeduc[natl2003$dmeduc == 99] <- NA
 natl2003$mpcb[natl2003$mpcb == 99] <- NA
 natl2003$urf_eclam[natl2003$urf_eclam %in% c(8, 9)] <- NA
 natl2003$combgest[natl2003$combgest == 99] <- NA
 
-# Remove rows with missing values
-#natl2003 <- na.omit(natl2003)
-
-# Compute APNCU Index (assuming computeAPNCU function is defined)
+# Compute APNCU-2M Index
 natl2003$precare <- apply(natl2003, 1, function(x) computeAPNCU1M(x['mpcb'], x['uprevis'], x['combgest']))
 
 print(sum(is.na(natl2003$precare)))
@@ -160,16 +146,17 @@ precare_proportions <- table(natl2003$precare) / nrow(natl2003) * 100
 print(precare_proportions)
 print(sum(is.na(natl2003$precare))/nrow(natl2003) * 100)
 
-natl2003 <- subset(natl2003, !(precare == "Intermediate" | precare == "Adequate Plus"))
-natl2003$precare <- ifelse(natl2003$precare == "Inadequate", 0, 1)
+# RECODE
 natl2003$tobuse <- ifelse(natl2003$tobuse == 2, 0, natl2003$tobuse)
 natl2003$urf_eclam <- ifelse(natl2003$urf_eclam == 2, 0, natl2003$urf_eclam)
 natl2003$mar <- ifelse(natl2003$mar == 2, 0, natl2003$mar)
-
+natl2003$precare <- ifelse(natl2003$precare == "Inadequate", 0,
+                           ifelse(natl2003$precare == "Intermediate", 1,
+                                  ifelse(natl2003$precare == "Adequate", 2,
+                                         ifelse(natl2003$precare == "Adequate Plus", 3, NA))))
 count(natl2003)
 
 # Save the cleaned data to a new CSV file
 write_csv(natl2003, "cleaned_natl2003.csv")
-
 
 
