@@ -123,7 +123,7 @@ natl2003$mpcb[natl2003$mpcb == 99] <- NA
 natl2003$urf_eclam[natl2003$urf_eclam %in% c(8, 9)] <- NA
 natl2003$combgest[natl2003$combgest == 99] <- NA
 
-# Compute APNCU-2M Index
+# Compute APNCU-1M Index
 natl2003$precare <- apply(natl2003, 1, function(x) computeAPNCU1M(x['mpcb'], x['uprevis'], x['combgest']))
 
 print(sum(is.na(natl2003$precare)))
