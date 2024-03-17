@@ -108,7 +108,7 @@ natl2003 <- read_csv("linkco2003us_den.csv")
 
 # Keep only selected variables
 natl2003 <- natl2003 %>%
-  select(mager41, dmeduc, mracerec, mar, mpcb, uprevis, urf_eclam, combgest, tobuse, cigs, mracehisp)
+  select(mager41, umeduc, mracerec, mar, mpcb, uprevis, urf_eclam, combgest, tobuse, cigs, mracehisp)
 
 count(natl2003)
 natl2003 <- na.omit(natl2003)
@@ -118,7 +118,7 @@ count(natl2003)
 natl2003$tobuse[natl2003$tobuse == 9] <- NA
 natl2003$cigs[natl2003$cigs == 99] <- NA
 natl2003$mar[natl2003$mar == 9] <- NA
-natl2003$dmeduc[natl2003$dmeduc == 99] <- NA
+natl2003$umeduc[natl2003$umeduc == 99] <- NA
 natl2003$mpcb[natl2003$mpcb == 99] <- NA
 natl2003$urf_eclam[natl2003$urf_eclam %in% c(8, 9)] <- NA
 natl2003$combgest[natl2003$combgest == 99] <- NA
@@ -131,7 +131,7 @@ print(sum(is.na(natl2003$precare)))
 # Compute prebirth variable
 natl2003$prebirth <- ifelse(natl2003$combgest < 37, 1, 0)
 
-natl2003$somecollege <- ifelse(natl2003$dmeduc < 13, 0, 1)
+natl2003$somecollege <- ifelse(natl2003$umeduc < 13, 0, 1)
 
 natl2003$mracerec <- ifelse(natl2003$mracehisp %in% 1:5, 5, natl2003$mracerec)
 
