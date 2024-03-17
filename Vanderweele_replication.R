@@ -60,7 +60,6 @@ mydata11$l <- 1
 mydata11$a <- as.factor(mydata11$a)
 mydata11$l <- as.factor(mydata11$l)
 
-# Assuming logistic model for 'm' has already been fitted on 'mydata'
 fit_m <- glm(m ~ a + l + c1 + c2 + c3 + c4, data=mydata, family=binomial(link="logit"))
 
 mydataw <- mydata
