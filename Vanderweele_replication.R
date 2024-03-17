@@ -1,11 +1,12 @@
-# REPLICATION
-
 cleaned_natl2003 <- read_csv("cleaned_natl2003.csv")
+cleaned_natl2003 <- na.omit(cleaned_natl2003)
+
+cleaned_natl2003_bin <- subset(cleaned_natl2003, !(precare == 1 | precare == 3))
+cleaned_natl2003_bin$precare <- ifelse(cleaned_natl2003_bin$precare == 2, 1, cleaned_natl2003_bin$precare)
 
 # Rename columns and create a new data frame
-mydata <- cleaned_natl2003 %>%
+mydata <- cleaned_natl2003_bin %>%
   rename(y = prebirth, a = precare, m = urf_eclam, l = tobuse, c1 = age,c2 = somecollege, c3 = mracerec, c4 = mar)
-
 
 mydata$y <- as.factor(mydata$y)
 mydata$a <- as.factor(mydata$a)
@@ -15,7 +16,6 @@ mydata$c1 <- as.factor(mydata$c1)
 mydata$c2 <- as.factor(mydata$c2)
 mydata$c3 <- as.factor(mydata$c3)
 mydata$c4 <- as.factor(mydata$c4)
-
 
 # Create modified datasets with different values of 'a' and 'l'
 mydata0 <- mydata
