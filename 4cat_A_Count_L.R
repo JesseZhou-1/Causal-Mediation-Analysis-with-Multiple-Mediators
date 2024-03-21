@@ -18,12 +18,7 @@ mydata2$c2 <- as.factor(mydata2$c2)
 mydata2$c3 <- as.factor(mydata2$c3)
 mydata2$c4 <- as.factor(mydata2$c4)
 
-model_spec_2_1 <- list(
-  list(func = "glm", formula = l ~ a + c1 + c2 + c3 + c4, args = list(family = "poisson")),
-  list(func = "glm", formula = m ~ a + l + c1 + c2 + c3 + c4, args = list(family = "binomial")),
-  list(func = "glm", formula = y ~ a + l + m + c1 + c2 + c3 + c4, args = list(family = "binomial"))
-)
-
+# All Two-way Interactions
 model_spec_2_2 <- list(
   list(func = "glm", formula = l ~ a * (c1 + c2 + c3 + c4), args = list(family = "poisson")),
   list(func = "glm", formula = m ~ a * (c1 + c2 + c3 + c4) + l * (c1 + c2 + c3 + c4), args = list(family = "binomial")),
@@ -31,25 +26,29 @@ model_spec_2_2 <- list(
 )
 
 # Path-specfic Effects
-# Additive
-medsim_core(data=mydata2, num_sim = 2000,
-            cat_list = c("0", "1"), treatment = "a",
-            intv_med = NULL, model_spec = model_spec_2_1)
-
-# All Two-way Interactions
 medsim_core(data=mydata2, num_sim = 2000,
             cat_list = c("0", "1"), treatment = "a",
             intv_med = NULL, model_spec = model_spec_2_2)
 
-# Interventional Effects
-# Additive
 medsim_core(data=mydata2, num_sim = 2000,
-            cat_list = c("0", "1"), treatment = "a",
-            intv_med = ("m"), model_spec = model_spec_2_1)
+            cat_list = c("1", "2"), treatment = "a",
+            intv_med = NULL, model_spec = model_spec_2_2)
 
-# All Two-way Interactions
+medsim_core(data=mydata2, num_sim = 2000,
+            cat_list = c("2", "3"), treatment = "a",
+            intv_med = NULL, model_spec = model_spec_2_2)
+
+# Interventional Effects
 medsim_core(data=mydata2, num_sim = 2000,
             cat_list = c("0", "1"), treatment = "a",
+            intv_med = ("m"), model_spec = model_spec_2_2)
+
+medsim_core(data=mydata2, num_sim = 2000,
+            cat_list = c("1", "2"), treatment = "a",
+            intv_med = ("m"), model_spec = model_spec_2_2)
+
+medsim_core(data=mydata2, num_sim = 2000,
+            cat_list = c("2", "3"), treatment = "a",
             intv_med = ("m"), model_spec = model_spec_2_2)
 
 
