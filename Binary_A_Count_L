@@ -29,8 +29,8 @@ model_spec_1_1 <- list(
 
 model_spec_1_2 <- list(
   list(func = "glm", formula = l ~ a * (c1 + c2 + c3 + c4), args = list(family = "poisson")),
-  list(func = "glm", formula = m ~ a * (c1 + c2 + c3 + c4) + l * (c1 + c2 + c3 + c4), args = list(family = "binomial")),
-  list(func = "glm", formula = y ~ (a + l + m) * (c1 + c2 + c3 + c4), args = list(family = "binomial"))
+  list(func = "glm", formula = m ~ a * l + a * (c1 + c2 + c3 + c4) + l * (c1 + c2 + c3 + c4), args = list(family = "binomial")),
+  list(func = "glm", formula = y ~ a * l + a * m + l * m + (a + l + m) * (c1 + c2 + c3 + c4), args = list(family = "binomial"))
 )
 
 # Path-specific Effects
