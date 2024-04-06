@@ -31,7 +31,10 @@ trainMed(path=path, dataset_name=dataset_name, treatment='a', confounder=["c1", 
            int_net=[60, 50, 40, 30, 20])
 
 from simMed import simMed
-simMed(path=path, dataset_name=dataset_name, model_name=path + 'seed_1', n_mce_samples=100000, seed=1, inv_datafile_name='1_path_100k',
+simMed(path=path, dataset_name=dataset_name, model_name=path + 'seed_1', n_mce_samples=1000000, seed=1, inv_datafile_name='1_path_1M',
+        cat_list=[0, 1], moderator=None)
+
+simMed(path=path, dataset_name=dataset_name, model_name=path + 'seed_1', n_mce_samples=1000000, mediator=["m=intv"], seed=1, inv_datafile_name='1_intv_1M',
         cat_list=[0, 1], moderator=None)
 
 end_time = time.time()
