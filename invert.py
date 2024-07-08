@@ -24,10 +24,10 @@ def batch_iter(X, batch_size, shuffle=False):
 
 
 base_path = ''  # Define the base path for file operations.
-folder = 'natl_2003_549243471'  # Define the folder where files will be stored.
+folder = 'natl_2003_776094532_new'  # Define the folder where files will be stored.
 path = os.path.join(base_path, folder, '')  # Combines the base path and folder into a complete path.
 dataset_name = 'cleaned_natl2003_bin'  # Define the name of the dataset.
-model_name = 'seed_549243471'
+model_name = 'seed_776094532'
 
 # Identify whether the system has a GPU, if yes it sets the device to "cuda:0" else "cpu"
 device = "cpu" if not (torch.cuda.is_available()) else "cuda:0"
