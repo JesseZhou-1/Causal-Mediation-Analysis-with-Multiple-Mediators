@@ -15,7 +15,7 @@ mydata <- cleaned_natl2003_bin %>%
 mydata$y <- as.factor(mydata$y)
 mydata$a <- as.factor(mydata$a)
 mydata$m <- as.factor(mydata$m)
-mydata$l <- as.factor(mydata$l)
+mydata$l <- as.factor(mydata$l) # remove thie line if using count L
 mydata$c1 <- as.factor(mydata$c1)
 mydata$c2 <- as.factor(mydata$c2)
 mydata$c3 <- as.factor(mydata$c3)
@@ -31,6 +31,7 @@ model_spec_1_1 <- list(
 
 model_spec_1_2 <- list(
   list(func = "glm", formula = l ~ a * (c1 + c2 + c3 + c4), args = list(family = "binomial")),
+  # list(func = "glm", formula = l ~ a * (c1 + c2 + c3 + c4), args = list(family = "poisson")), # if using count L
   list(func = "glm", formula = m ~ a * l + a * (c1 + c2 + c3 + c4) + l * (c1 + c2 + c3 + c4), args = list(family = "binomial")),
   list(func = "glm", formula = y ~ a * l + a * m + l * m + (a + l + m) * (c1 + c2 + c3 + c4), args = list(family = "binomial"))
 )
