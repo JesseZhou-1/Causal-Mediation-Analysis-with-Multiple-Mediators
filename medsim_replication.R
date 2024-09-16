@@ -10,7 +10,7 @@ cleaned_natl2003_bin$precare <- ifelse(cleaned_natl2003_bin$precare == 2, 1, cle
 
 # Rename columns and create a new data frame
 mydata <- cleaned_natl2003_bin %>%
-  rename(y = prebirth, a = precare, m = urf_eclam, l = tobuse, c1 = age,c2 = somecollege, c3 = mracerec, c4 = mar)
+  rename(y = prebirth, a = precare, m = urf_eclam, l = tobuse, c1 = age,c2 = somecollege, c3 = mracerec, c4 = mar) # l = cigs if using count L
 
 mydata$y <- as.factor(mydata$y)
 mydata$a <- as.factor(mydata$a)
