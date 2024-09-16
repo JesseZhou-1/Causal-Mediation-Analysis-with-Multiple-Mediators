@@ -24,6 +24,7 @@ mydata$c4 <- as.factor(mydata$c4)
 # Define the model specifications based on your SEM
 model_spec_1_1 <- list(
   list(func = "glm", formula = l ~ a + c1 + c2 + c3 + c4, args = list(family = "binomial")),
+  # list(func = "glm", formula = l ~ a + c1 + c2 + c3 + c4, args = list(family = "poisson")), # if using count L
   list(func = "glm", formula = m ~ a + l + c1 + c2 + c3 + c4, args = list(family = "binomial")),
   list(func = "glm", formula = y ~ a + l + m + c1 + c2 + c3 + c4, args = list(family = "binomial"))
 )
