@@ -21,7 +21,7 @@ dataset_name = 'cleaned_natl2003_bin'  # Define the name of the dataset.
 if not (os.path.isdir(path)):  # checks if a directory with the name 'path' exists.
     os.makedirs(path)  # if not, creates a new directory with this name. This is where the logs and model weights will be saved.
 
-corr_strength_1 = {("a", "y"): -0.2, ("a", "l"): -0.4, ("l", "y"): 0.4}
+corr_strength_1 = {("a", "y"): -0.2, ("a", "l"): -0.4, ("l", "y"): 0.4} 
 
 # MODEL TRAINING
 from trainMed import trainMed
