@@ -6,7 +6,7 @@ This repository contains the replication files for the paper **"Causal Mediation
 
 - **`clean.R`**: Script to clean the raw dataset for analysis.
 - **`deq.py`**: Generates the dequantized data using cGNF for Figure 6.
-- **`invert.py`**: Transforms the data into a standard Gaussian distribution using cGNF for Figure 6.
+- **`normalizing.py`**: Transforms the data into a standard Gaussian distribution using cGNF for Figure 6.
 - **`transformation_plot.py`**: Combines the plots of the original, dequantized, and transformed data for Figure 6.
 - **`medsim_replication.R`**: Performs parametric causal mediation analysis to replicate results in Table 1.
 - **`medsimGNF_replication.R`**: Executes causal mediation analysis using cGNF to replicate results in Table 2.
