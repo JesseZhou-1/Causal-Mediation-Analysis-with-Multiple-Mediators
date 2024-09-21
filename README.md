@@ -14,5 +14,5 @@ This repository contains the replication files for the paper **"Causal Mediation
 
 ## Instructions:
 
-1. Install the `medsim` package in R for parametric causal mediation analysis.
-2. Install the `medsimGNF` package in Python for causal mediation analysis using cGNF.
+1. Install the [`medsim`](https://github.com/JesseZhou-1/medsim) package in R for parametric causal mediation analysis.
+2. Install the [`medsimGNF`](https://github.com/JesseZhou-1/medsimGNF) package in Python for causal mediation analysis using cGNF.
