@@ -2,6 +2,10 @@
 
 This repository contains the replication files for the paper **"Causal Mediation Analysis with Multiple Mediators: A Simulation Approach"**.
 
+## Replication Data
+
+This study reanalyzes the 2003 U.S. birth certificate data examined in VanderWeele et al. (2014). The dataset can be downloaded at the following link: [Download Data](https://data.nber.org/lbid/2003/linkco2003us_den.csv.zip).
+
 ## Files and Descriptions:
 
 - **`clean.R`**: Script to clean the raw dataset for analysis.
