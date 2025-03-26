@@ -165,6 +165,6 @@ cleaned_natl2003_bin$precare <- ifelse(cleaned_natl2003_bin$precare == 2, 1, cle
 
 # Rename columns and create a new data frame
 cleaned_natl2003_bin <- cleaned_natl2003_bin %>%
-  rename(y = prebirth, a = precare, m = urf_eclam, l = tobuse, c1 = age,c2 = somecollege, c3 = mracerec, c4 = mar) # l = cigs if using count L
+  rename(y = prebirth, a = precare, m = urf_eclam, l = cigs, c1 = age,c2 = somecollege, c3 = mracerec, c4 = mar)
 
 write_csv(cleaned_natl2003_bin, "cleaned_natl2003_bin.csv")
