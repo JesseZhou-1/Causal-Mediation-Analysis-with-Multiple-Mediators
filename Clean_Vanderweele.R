@@ -170,6 +170,7 @@ natl2003_bin <- natl2003_bin %>%
 # Subset the data to keep only the required variables
 cleaned_natl2003_bin <- natl2003_bin[, c("y", "a", "m", "l", "c1", "c2", "c3", "c4")]
 
+# Drop rows with missing values
 cleaned_natl2003_bin <- na.omit(cleaned_natl2003_bin)
                           
 write_csv(cleaned_natl2003_bin, "cleaned_natl2003_bin.csv")
