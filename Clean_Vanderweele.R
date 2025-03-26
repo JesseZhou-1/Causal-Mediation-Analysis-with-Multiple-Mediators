@@ -160,11 +160,14 @@ count(natl2003)
 write_csv(natl2003, "cleaned_natl2003.csv")
 
 # For medsimGNF
-cleaned_natl2003_bin <- subset(cleaned_natl2003, !(precare == 1 | precare == 3))
-cleaned_natl2003_bin$precare <- ifelse(cleaned_natl2003_bin$precare == 2, 1, cleaned_natl2003_bin$precare)
+natl2003_bin <- subset(natl2003, !(precare == 1 | precare == 3))
+natl2003_bin$precare <- ifelse(natl2003_bin$precare == 2, 1, natl2003_bin$precare)
 
 # Rename columns and create a new data frame
-cleaned_natl2003_bin <- cleaned_natl2003_bin %>%
+natl2003_bin <- natl2003_bin %>%
   rename(y = prebirth, a = precare, m = urf_eclam, l = cigs, c1 = age,c2 = somecollege, c3 = mracerec, c4 = mar)
+
+# Subset the data to keep only the required variables
+cleaned_natl2003_bin <- natl2003_bin[, c("y", "a", "m", "l", "c1", "c2", "c3", "c4")]
 
 write_csv(cleaned_natl2003_bin, "cleaned_natl2003_bin.csv")
