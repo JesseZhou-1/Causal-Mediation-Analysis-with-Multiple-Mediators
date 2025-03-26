@@ -24,7 +24,7 @@ if not (os.path.isdir(path)):  # checks if a directory with the name 'path' exis
 ## MODEL TRAINING
 from trainMed import trainMed
 trainMed(path=path, dataset_name=dataset_name, treatment='a', confounder=["c1", "c2", "c3", "c4"], mediator=["l", "m"], outcome='y',
-           test_size=0.2, cat_var=["a", "l", "m", "y", "c1", "c2", "c3", "c4"], sens_corr=None, seed_split=1,
+           test_size=0.2, cat_var=["a", "m", "y", "c1", "c2", "c3", "c4"], sens_corr=None, seed_split=1,
            model_name=path + 'seed_1',
            trn_batch_size=128, val_batch_size=4096, learning_rate=1e-4, seed=1,
            nb_epoch=50000, nb_estop=50, val_freq=1,
