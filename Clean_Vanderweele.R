@@ -159,7 +159,7 @@ count(natl2003)
 # Save the cleaned data to a new CSV file
 write_csv(natl2003, "cleaned_natl2003.csv")
 
-# Convert treatment into binary
+# For medsimGNF
 cleaned_natl2003_bin <- subset(cleaned_natl2003, !(precare == 1 | precare == 3))
 cleaned_natl2003_bin$precare <- ifelse(cleaned_natl2003_bin$precare == 2, 1, cleaned_natl2003_bin$precare)
 
