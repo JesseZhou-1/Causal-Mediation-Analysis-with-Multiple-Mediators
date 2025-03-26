@@ -1,0 +1,92 @@
+library(readr)
+library(dplyr)
+library(medsim)
+
+# devtools::install_local("~/Desktop/medsim")
+
+
+load("Brader_et_al2008.RData")
+
+# function for demeaning
+demean <- function(x) x - mean(x, na.rm = TRUE)
+
+# data preprocessing
+Brader2 <- Brader %>%
+  dplyr::select(immigr, emo, p_harm, tone_eth, ppage, ppeducat, ppgender, ppincimp) %>% na.omit() %>%
+  mutate(immigr = as.numeric(scale(4 - immigr)),
+         hs = (ppeducat == "high school"),
+         sc = (ppeducat == "some college"),
+         ba = (ppeducat == "bachelor's degree or higher"),
+         female = (ppgender == "female")) %>%
+  mutate_at(vars(emo, p_harm, ppage, female, hs, sc, ba, ppincimp), demean)
+
+summary(Brader2)
+
+mydata <- Brader2 %>%
+  rename(y = immigr, a = tone_eth, m = emo, l = p_harm, c1 = ppage,c2 = female, c3 = hs, c4 = sc, c5 = ba, c6 = ppincimp)
+
+mydata$a <- as.factor(mydata$a)
+
+# Define the model specifications based on your SEM
+model_spec_1_1 <- list(
+  list(func = "lm", formula = l ~ a + c1 + c2 + c3 + c4 + c5 + c6, args = list()),
+  list(func = "lm", formula = m ~ a + l + c1 + c2 + c3 + c4 + c5 + c6, args = list()),
+  list(func = "lm", formula = y ~ a + l + m + c1 + c2 + c3 + c4 + c5 + c6, args = list())
+)
+
+model_spec_1_2 <- list(
+  list(func = "lm", formula = l ~ a + c1 + c2 + c3 + c4 + c5 + c6, args = list()),
+  list(func = "lm", formula = m ~ a * l + c1 + c2 + c3 + c4 + c5 + c6, args = list()),
+  list(func = "lm", formula = y ~ a * l + a * m + c1 + c2 + c3 + c4 + c5 + c6, args = list())
+)
+
+
+model_spec_1_3 <- list(
+  list(func = "lm", formula = l ~ a * (c1 + c2 + c3 + c4 + c5 + c6), args = list()),
+  list(func = "lm", formula = m ~ a * l + a * (c1 + c2 + c3 + c4 + c5 + c6), args = list()),
+  list(func = "lm", formula = y ~ a * l + a * m + a * (c1 + c2 + c3 + c4 + c5 + c6), args = list())
+)
+
+# Path-specific Effects
+# Additive
+medsim(data=mydata, num_sim = 2000,
+       cat_list = c("0", "1"), treatment = "a",
+       intv_med = NULL, model_spec = model_spec_1_1,
+       boot = TRUE, reps = 100,
+       resv_core = 1, seed = NULL)
+
+# Exposure-Mediators Interactions
+medsim(data=mydata, num_sim = 2000,
+       cat_list = c("0", "1"), treatment = "a",
+       intv_med = NULL, model_spec = model_spec_1_2,
+       boot = TRUE, reps = 100,
+       resv_core = 1, seed = NULL)
+
+# Exposure-Mediators and Exposure-Covariates Interactions
+medsim(data=mydata, num_sim = 2000,
+       cat_list = c("0", "1"), treatment = "a",
+       intv_med = NULL, model_spec = model_spec_1_3,
+       boot = TRUE, reps = 100,
+       resv_core = 1, seed = NULL)
+
+# Interventional Effects
+# Additive
+medsim(data=mydata, num_sim = 2000,
+       cat_list = c("0", "1"), treatment = "a",
+       intv_med = ("m"), model_spec = model_spec_1_1,
+       boot = TRUE, reps = 100,
+       resv_core = 1, seed = NULL)
+
+# Exposure-Mediators Interactions
+medsim(data=mydata, num_sim = 2000,
+       cat_list = c("0", "1"), treatment = "a",
+       intv_med = ("m"), model_spec = model_spec_1_2,
+       boot = TRUE, reps = 100,
+       resv_core = 1, seed = NULL)
+
+# Exposure-Mediators and Exposure-Covariates Interactions
+medsim(data=mydata, num_sim = 2000,
+       cat_list = c("0", "1"), treatment = "a",
+       intv_med = ("m"), model_spec = model_spec_1_3,
+       boot = TRUE, reps = 100,
+       resv_core = 1, seed = NULL)
