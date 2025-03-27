@@ -1,4 +1,4 @@
-# Causal Mediation Analysis with Multiple Mediators: A Simulation Approach: Replication Files
+# Causal Mediation Analysis with Multiple Mediators: A Simulation Approach
 
 This repository contains the replication files for the paper **"Causal Mediation Analysis with Multiple Mediators: A Simulation Approach"**.
 
