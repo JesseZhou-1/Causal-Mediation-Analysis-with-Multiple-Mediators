@@ -4,7 +4,6 @@ library(medsim)
 
 # devtools::install_local("~/Desktop/medsim")
 
-
 load("Brader_et_al2008.RData")
 
 # function for demeaning
@@ -27,7 +26,7 @@ mydata <- Brader2 %>%
 
 mydata$a <- as.factor(mydata$a)
 
-# Define the model specifications based on your SEM
+# Define the model specifications
 model_spec_1_1 <- list(
   list(func = "lm", formula = l ~ a + c1 + c2 + c3 + c4 + c5 + c6, args = list()),
   list(func = "lm", formula = m ~ a + l + c1 + c2 + c3 + c4 + c5 + c6, args = list()),
@@ -35,13 +34,6 @@ model_spec_1_1 <- list(
 )
 
 model_spec_1_2 <- list(
-  list(func = "lm", formula = l ~ a + c1 + c2 + c3 + c4 + c5 + c6, args = list()),
-  list(func = "lm", formula = m ~ a * l + c1 + c2 + c3 + c4 + c5 + c6, args = list()),
-  list(func = "lm", formula = y ~ a * l + a * m + c1 + c2 + c3 + c4 + c5 + c6, args = list())
-)
-
-
-model_spec_1_3 <- list(
   list(func = "lm", formula = l ~ a * (c1 + c2 + c3 + c4 + c5 + c6), args = list()),
   list(func = "lm", formula = m ~ a * l + a * (c1 + c2 + c3 + c4 + c5 + c6), args = list()),
   list(func = "lm", formula = y ~ a * l + a * m + a * (c1 + c2 + c3 + c4 + c5 + c6), args = list())
@@ -50,43 +42,24 @@ model_spec_1_3 <- list(
 # Path-specific Effects
 # Additive
 medsim(data=mydata, num_sim = 2000,
-       cat_list = c("0", "1"), treatment = "a",
-       intv_med = NULL, model_spec = model_spec_1_1,
-       boot = TRUE, reps = 100,
-       resv_core = 1, seed = NULL)
-
-# Exposure-Mediators Interactions
-medsim(data=mydata, num_sim = 2000,
-       cat_list = c("0", "1"), treatment = "a",
-       intv_med = NULL, model_spec = model_spec_1_2,
-       boot = TRUE, reps = 100,
-       resv_core = 1, seed = NULL)
+       cat_list = c("0", "1"), treatment = "a", model_spec = model_spec_1_1,
+       boot = TRUE, boot_reps = 2000, boot_seed = 1001)
 
 # Exposure-Mediators and Exposure-Covariates Interactions
 medsim(data=mydata, num_sim = 2000,
-       cat_list = c("0", "1"), treatment = "a",
-       intv_med = NULL, model_spec = model_spec_1_3,
-       boot = TRUE, reps = 100,
-       resv_core = 1, seed = NULL)
+       cat_list = c("0", "1"), treatment = "a", model_spec = model_spec_1_2,
+       boot = TRUE, boot_reps = 2000, boot_seed = 1001)
 
 # Interventional Effects
 # Additive
 medsim(data=mydata, num_sim = 2000,
        cat_list = c("0", "1"), treatment = "a",
        intv_med = ("m"), model_spec = model_spec_1_1,
-       boot = TRUE, reps = 100,
-       resv_core = 1, seed = NULL)
-
-# Exposure-Mediators Interactions
-medsim(data=mydata, num_sim = 2000,
-       cat_list = c("0", "1"), treatment = "a",
-       intv_med = ("m"), model_spec = model_spec_1_2,
-       boot = TRUE, reps = 100,
-       resv_core = 1, seed = NULL)
+       boot = TRUE, boot_reps = 2000, boot_seed = 1001)
 
 # Exposure-Mediators and Exposure-Covariates Interactions
 medsim(data=mydata, num_sim = 2000,
        cat_list = c("0", "1"), treatment = "a",
-       intv_med = ("m"), model_spec = model_spec_1_3,
-       boot = TRUE, reps = 100,
-       resv_core = 1, seed = NULL)
+       intv_med = ("m"), model_spec = model_spec_1_2,
+       boot = TRUE, boot_reps = 2000, boot_seed = 1001)
+
