@@ -43,23 +43,23 @@ model_spec_1_2 <- list(
 # Additive
 medsim(data=mydata, num_sim = 2000,
        cat_list = c("0", "1"), treatment = "a", model_spec = model_spec_1_1,
-       boot = TRUE, boot_reps = 2000, boot_seed = 1001)
+       boot = TRUE, boot_reps = 2000, seed = 1001)
 
 # Exposure-Mediators and Exposure-Covariates Interactions
 medsim(data=mydata, num_sim = 2000,
        cat_list = c("0", "1"), treatment = "a", model_spec = model_spec_1_2,
-       boot = TRUE, boot_reps = 2000, boot_seed = 1001)
+       boot = TRUE, boot_reps = 2000, seed = 1001)
 
 # Interventional Effects
 # Additive
 medsim(data=mydata, num_sim = 2000,
        cat_list = c("0", "1"), treatment = "a",
        intv_med = ("m"), model_spec = model_spec_1_1,
-       boot = TRUE, boot_reps = 2000, boot_seed = 1001)
+       boot = TRUE, boot_reps = 2000, seed = 1001)
 
 # Exposure-Mediators and Exposure-Covariates Interactions
 medsim(data=mydata, num_sim = 2000,
        cat_list = c("0", "1"), treatment = "a",
        intv_med = ("m"), model_spec = model_spec_1_2,
-       boot = TRUE, boot_reps = 2000, boot_seed = 1001)
+       boot = TRUE, boot_reps = 2000, seed = 1001)
 
