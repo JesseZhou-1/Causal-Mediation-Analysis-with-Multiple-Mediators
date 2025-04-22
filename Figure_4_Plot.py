@@ -2,15 +2,15 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import norm
-import seaborn as sns
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import os
 
 plt.rcParams["font.family"] = "Times New Roman"
 
 # Path and data setup
 base_path = ''  # Define the base path for file operations.
-folder = 'natl_2003_776094532_new'  # Define the folder where files will be stored.
-path = os.path.join(base_path, folder, '')  # Combines the base path and folder into a complete path.
+folder = 'natl_2003_250470397'
+path = os.path.join(base_path, folder, '')
 
 # Load dataframes
 original_df = pd.read_csv(path + 'cleaned_natl2003_bin.csv')
@@ -21,12 +21,11 @@ inverted_df = pd.read_csv(path + 'inverted_data.csv')
 columns_to_plot = ['l', 'm', 'y']
 
 # Setup plot grid
-fig, axs = plt.subplots(nrows=3, ncols=3, figsize=(15, 10))  # Adjust figsize as needed
-fig.subplots_adjust(hspace=0.4, wspace=0.4)  # Adjust spacing between plots
+fig, axs = plt.subplots(nrows=3, ncols=3, figsize=(15, 10))
+fig.subplots_adjust(hspace=0.4, wspace=0.4)
 
 data_frames = [original_df, dequantized_df, inverted_df]
-
-titles = ['Original Data', 'Dequantized Data', 'transformed Data']
+titles = ['Original Data', 'Dequantized Data', 'Transformed Data']
 column_header = ['$L$', '$X$', '$Y$']
 
 # Set column headers
@@ -35,108 +34,165 @@ for i, col in enumerate(column_header):
 
 # Set row titles
 for i, row in enumerate(titles):
-    axs[i, 0].text(-0.3, 0.5, row, rotation=90, verticalalignment='center', horizontalalignment='right', transform=axs[i, 0].transAxes, fontsize=12, weight='bold')
+    axs[i, 0].text(
+        -0.3, 0.5, row,
+        rotation=90,
+        verticalalignment='center',
+        horizontalalignment='right',
+        transform=axs[i, 0].transAxes,
+        fontsize=12, weight='bold'
+    )
 
-
-# Iterate over each type of data (row) and each feature (column)
+# Plotting loop
 for i, df in enumerate(data_frames):
     for j, column in enumerate(columns_to_plot):
         ax = axs[i, j]
-        data = df[column.strip('$')]
+        data = df[column]
 
-        if i == 2:  # Only for inverted data
-            count, bins, ignored = ax.hist(data, bins=200, density=True, alpha=0.6, color='gray')
-            x = np.linspace(min(bins), max(bins), 1000)
-            p = norm.pdf(x, 0, 1)
-            ax.plot(x, p, 'k', linewidth=2)
-
+        if i == 2:
+            # Transformed data: histogram + N(0,1)
+            _, bins, _ = ax.hist(data, bins=200, density=True, alpha=0.6, color='gray')
+            x = np.linspace(bins.min(), bins.max(), 1000)
+            ax.plot(x, norm.pdf(x, 0, 1), 'k', linewidth=2)
             ax.set_ylabel('Density')
 
-        elif i == 1:  # Dequantized data
+        elif i == 1:
+            # Dequantized data
+            if column == 'l':
+                counts, edges = np.histogram(data, bins=400, density=True)
+                centers = 0.5 * (edges[:-1] + edges[1:])
+                heights = counts * np.diff(edges) * 20
+                ax.bar(centers, heights, width=np.diff(edges), alpha=0.6, color='gray')
+                ax.set_ylabel('Density')
+                ax.set_xlim(-0.6, 5.6)
+                ax.set_ylim(0, 1)
+                # inset zoom on l=4 and l=5
+                inset_l = inset_axes(ax, width="30%", height="30%", loc='upper right', borderpad=1)
+                inset_l.bar(centers, heights, width=np.diff(edges), alpha=0.6, color='gray')
+                inset_l.set_xlim(3.4, 5.6)
+                mask_l = (centers >= 3.4) & (centers <= 5.6)
+                ymax_l = heights[mask_l].max() * 1.1
+                inset_l.set_ylim(0, ymax_l)
+                # ticks for l zoom
+                xticks_l = [3.5, 4, 4.5, 5, 5.5]
+                inset_l.set_xticks(xticks_l)
+                inset_l.set_xticklabels([f"{x:.1f}" for x in xticks_l], fontsize=8)
+                yticks_l = np.linspace(0, ymax_l, 3)
+                inset_l.set_yticks(yticks_l)
+                inset_l.set_yticklabels([f"{y:.3f}" for y in yticks_l], fontsize=8)
 
-            # count, bins, ignored = ax.hist(data, bins=200, density=True, alpha=0.6, color='gray')
+                # arrow indicating zoom
+                idx1 = np.argmin(np.abs(centers - 1))
+                y1 = heights[idx1]
+                ax.annotate(
+                    '',
+                    xy=(4.5, y1-0.02), xycoords='data',
+                    xytext=(0.85, 0.8), textcoords='axes fraction',
+                    arrowprops=dict(arrowstyle='->', color='black', lw=1)
+                )
 
-            counts, bin_edges = np.histogram(data, bins=200, density=True)
-            bin_centers = 0.5 * (bin_edges[:-1] + bin_edges[1:])
-            adjusted_counts = counts * np.diff(bin_edges) * 20
-            ax.bar(bin_centers, adjusted_counts, width=np.diff(bin_edges), alpha=0.6, color='gray')
+            elif column == 'm':
+                counts, edges = np.histogram(data, bins=200, density=True)
+                centers = 0.5 * (edges[:-1] + edges[1:])
+                heights = counts * np.diff(edges) * 20
+                ax.bar(centers, heights, width=np.diff(edges), alpha=0.6, color='gray')
+                ax.set_ylabel('Density')
+                ax.set_xlim(-0.6, 1.6)
+                ax.set_ylim(0, 0.675)
+                # inset zoom on m ≈ 1
+                inset = inset_axes(ax, width="30%", height="30%", loc='upper right', borderpad=1)
+                inset.bar(centers, heights, width=np.diff(edges), alpha=0.6, color='gray')
+                # adjust x-range to include more bins
+                inset.set_xlim(0.5, 1.5)
+                mask = (centers >= 0.5) & (centers <= 1.5)
 
-            ax.set_ylabel('Density')
-            # ax.clear()
-            # adjusted_count = count * np.diff(bins)
-            # bin_centers = 0.5 * (bins[:-1] + bins[1:])
-            # ax.bar(bin_centers, adjusted_count, width=np.diff(bins), alpha=0.6, color='gray')
-            ax.set_ylim(0.0, 0.675) # Ensure there's always space above the highest value
-            ax.set_xlim(-0.6, 1.6)
+                # auto-scale to highest spike in window
+                ymax = heights[mask].max() * 1.1
+                inset.set_ylim(0, ymax)
 
+                # set ticks dynamically
+                xticks_m = [0.6, 1, 1.4]
+                inset.set_xticks(xticks_m)
+                inset.set_xticklabels([f"{x:.1f}" for x in xticks_m])
+                yticks = np.linspace(0, ymax, 3)
+                inset.set_yticks(yticks)
+                inset.set_yticklabels([f"{y:.3f}" for y in yticks])
 
-        else:  # Original data
+                # arrow indicating zoom
+                idx1 = np.argmin(np.abs(centers - 1))
+                y1 = heights[idx1]
+                ax.annotate(
+                    '',
+                    xy=(1, y1), xycoords='data',
+                    xytext=(0.77, 0.8), textcoords='axes fraction',
+                    arrowprops=dict(arrowstyle='->', color='black', lw=1)
+                )
 
-            # Define bins such that 0 and 1 are centered
-            bin_edges = np.array([-0.5, 0.5, 1.5])  # Defines bins with 0 and 1 as centers
-            counts, _ = np.histogram(data, bins=bin_edges)
-            bin_centers = [0, 1]  # Directly setting bin centers to 0 and 1
-            total_data_points = len(data)
-            adjusted_counts = counts / (total_data_points * np.diff(bin_edges))
+            else:
+                counts, edges = np.histogram(data, bins=200, density=True)
+                centers = 0.5 * (edges[:-1] + edges[1:])
+                heights = counts * np.diff(edges) * 20
+                ax.bar(centers, heights, width=np.diff(edges), alpha=0.6, color='gray')
+                ax.set_ylabel('Density')
+                ax.set_xlim(-0.6, 1.6)
+                ax.set_ylim(0, 0.675)
 
-            ax.set_ylim(0.0, 1.05)  # Ensure there's always space above the highest value
-            ax.set_xlim(-0.6, 1.6)
+        else:
+            # Original data
+            if column == 'l':
+                vals = sorted(data.dropna().unique())
+                edges = np.arange(vals[0] - 0.5, vals[-1] + 1.5, 1)
+                counts, _ = np.histogram(data, bins=edges)
+                centers = vals
+                props = counts / (len(data) * np.diff(edges))
+                for c, p in zip(centers, props):
+                    ax.vlines(c, 0, p, color='black', linewidth=0.5)
+                    ax.scatter(c, p, color='black', s=10, zorder=3)
+                ax.set_xlim(-0.6, 5.6)
+                ax.set_ylim(0, props.max() * 1.1)
+                ax.set_ylabel('Probability')
 
-            if column != 'm':
-
-                # Plot droplines and circles at the top of each dropline
-                for center, count in zip(bin_centers, adjusted_counts):
-                    ax.vlines(center, 0, count, color='black', linewidth=0.5)  # Droplines from count to axis
-                    ax.scatter(center, count, color='black', s=10, zorder=3)  # Solid circle at the top of the line
-
-            else:  # for column 'm'
-                adjusted_counts[1] *= 100  # Scale up the probability for '1'
-
-                # Plot droplines for 0 and scaled line for 1
-                for center, count in zip([0, 1], adjusted_counts):
-                    if center == 0:
-                        ax.vlines(center, 0.53, count, color='black', linewidth=0.5)  # Droplines from count to upper breakage
-                        # ax.vlines(center, 0.47, 0.53, color='grey', linestyles='dotted', linewidth=0.5)  # Droplines from upper breakage to lower breakage
-                        ax.vlines(center, 0, 0.47, color='black', linewidth=0.5)  # Droplines from lower breakage to axis
-
-                        # Adding diagonal slopes
-                        ax.plot([center - 0.02, center + 0.02], [0.48, 0.46], color='black',
-                                linewidth=0.5)  # lower diagonal slope
-                        ax.plot([center - 0.02, center + 0.02], [0.54, 0.52], color='black',
-                                linewidth=0.5)  # upper diagonal slope
-
-                        ax.scatter(center, count, color='black', s=10, zorder=3)  # Solid circle at the top of the line
+            elif column == 'm':
+                edges = np.array([-0.5, 0.5, 1.5])
+                counts, _ = np.histogram(data, bins=edges)
+                centers = [0, 1]
+                props = counts / (len(data) * np.diff(edges))
+                props[1] *= 100
+                for c, p in zip(centers, props):
+                    if c == 0:
+                        ax.vlines(c, 0, 0.47, color='black', linewidth=0.5)
+                        ax.vlines(c, 0.53, p, color='black', linewidth=0.5)
+                        ax.scatter(c, p, color='black', s=10, zorder=3)
                     else:
-                        ax.vlines(center, 0, count, color='black', linewidth=0.5)  # Droplines from count to axis
-                        ax.scatter(center, count, color='black', s=10, zorder=3)  # Solid circle at the top of the line
+                        ax.vlines(c, 0, p, color='black', linewidth=0.5)
+                        ax.scatter(c, p, color='black', s=10, zorder=3)
+                d = .01
+                kw = dict(transform=ax.transAxes, color='k', clip_on=False)
+                ax.plot((-d, +d), (0.48, 0.46), **kw)
+                ax.plot((-d, +d), (0.54, 0.52), **kw)
+                ax.spines['left'].set_bounds(-0.05, 0.49)
+                ax2 = ax.twinx()
+                ax2.spines['left'].set_bounds(0.53, 1)
+                ax.set_yticks([0, 0.2, 0.4, 0.6, 1])
+                ax.set_yticklabels(['0', '0.0002', '0.0004', '0.9', '1.0'])
+                ax.set_xlim(-0.6, 1.6)
+                ax.set_ylim(bottom=0)
+                ax.set_ylabel('Probability')
 
-                    # Add broken axis effect between 0.4 and 0.6
-                    d = .01  # Proportion of vertical to horizontal extent of the diagonal lines
-                    kwargs = dict(transform=ax.transAxes, color='k', clip_on=False)
-                    ax.plot((-d, +d), (0.48, 0.46), **kwargs)  # Lower diagonal on y axis
-                    ax.plot((-d, +d), (0.54, 0.52), **kwargs)  # Upper diagonal on y axis
-
-                    ax.spines['left'].set_bounds(-0.05, 0.49)
-                    ax2 = ax.twinx()
-                    ax2.spines['left'].set_bounds(0.53, 1)
-
-
-                    # Manually setting y-axis ticks and labels
-                    ax.set_yticks([0, 0.2, 0.4, 0.6, 1])
-                    ax.set_yticklabels(['0', '0.0002', '0.0004', '0.9', '1.0'])
-
-
-            ax.set_ylabel('Probability')
+            else:
+                edges = np.array([-0.5, 0.5, 1.5])
+                counts, _ = np.histogram(data, bins=edges)
+                centers = [0, 1]
+                props = counts / (len(data) * np.diff(edges))
+                for c, p in zip(centers, props):
+                    ax.vlines(c, 0, p, color='black', linewidth=0.5)
+                    ax.scatter(c, p, color='black', s=10, zorder=3)
+                ax.set_xlim(-0.6, 1.6)
+                ax.set_ylim(0, 1.05)
+                ax.set_ylabel('Probability')
 
         ax.grid(True, which='both', linestyle='--', linewidth=0.5)
-        # ax.clear()
-            # adjusted_count = count * np.diff(bins)
-            # bin_centers = 0.5 * (bins[:-1] + bins[1:])
-            # ax.bar(bin_centers, adjusted_count, width=np.diff(bins), alpha=0.6, color='gray')
 
-# plt.tight_layout()
-
-# Save the entire plot
-plt.savefig(f"{path}/combined_plots.png", dpi=300)
-plt.close()  # Close the plot to free memory
-# plt.show()  # Optionally display the plot
+# Save and close
+plt.savefig(os.path.join(path, 'combined_plots.png'), dpi=300)
+plt.close()
