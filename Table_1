@@ -34,9 +34,9 @@ model_spec_1_1 <- list(
 )
 
 model_spec_1_2 <- list(
-  list(func = "lm", formula = l ~ a * (c1 + c2 + c3 + c4 + c5 + c6), args = list()),
-  list(func = "lm", formula = m ~ a * l + a * (c1 + c2 + c3 + c4 + c5 + c6), args = list()),
-  list(func = "lm", formula = y ~ a * l + a * m + a * (c1 + c2 + c3 + c4 + c5 + c6), args = list())
+  list(func = "lm", formula = l ~ a + c1 + c2 + c3 + c4 + c5 + c6, args = list()),
+  list(func = "lm", formula = m ~ a * l + c1 + c2 + c3 + c4 + c5 + c6, args = list()),
+  list(func = "lm", formula = y ~ a * l + a * m + c1 + c2 + c3 + c4 + c5 + c6, args = list())
 )
 
 # Path-specific Effects
@@ -57,7 +57,7 @@ medsim(data=mydata, num_sim = 2000,
        intv_med = ("m"), model_spec = model_spec_1_1,
        boot = TRUE, boot_reps = 2000, seed = 1001)
 
-# Exposure-Mediators and Exposure-Covariates Interactions
+# Exposure-Mediators Interactions
 medsim(data=mydata, num_sim = 2000,
        cat_list = c("0", "1"), treatment = "a",
        intv_med = ("m"), model_spec = model_spec_1_2,
