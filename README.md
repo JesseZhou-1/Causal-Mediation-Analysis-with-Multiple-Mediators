@@ -4,7 +4,11 @@ This repository contains the replication files for the paper **"Causal Mediation
 
 ## Replication Data
 
-This study reanalyzes the 2003 U.S. birth certificate data examined in VanderWeele et al. (2014). The dataset can be downloaded at the following link: [Download Data](https://data.nber.org/lbid/2003/linkco2003us_den.csv.zip).
+The paper reanalyzes the 2003 U.S. birth certificate data used in VanderWeele et al. (2014) and the media framing experiment data from Brader et al. (2008), building on related work by Imai et al. (2013), Zhou and Yamamoto (2019), and Wodtke and Zhou (forthcoming).
+
+- The **2003 U.S. birth certificate data** can be downloaded here: [Download Data](https://data.nber.org/lbid/2003/linkco2003us_den.csv.zip)  
+- The **media framing experiment data** can be downloaded here: [Download Data](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/OU6D17)
+
 
 ## Files and Descriptions:
 
