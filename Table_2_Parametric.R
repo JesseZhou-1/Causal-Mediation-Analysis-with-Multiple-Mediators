@@ -22,7 +22,7 @@ mydata$c4 <- as.factor(mydata$c4)
 
 # Define the model specifications 
 model_spec <- list(
-  list(func = "glm", formula = l ~ a * (c1 + c2 + c3 + c4), args = list(family = "poisson")),
+  list(func = "polr", formula = l ~ a * (c1 + c2 + c3 + c4), args = list()),
   list(func = "glm", formula = m ~ a * l + a * (c1 + c2 + c3 + c4) + l * (c1 + c2 + c3 + c4), args = list(family = "binomial")),
   list(func = "glm", formula = y ~ a * l + a * m + l * m + (a + l + m) * (c1 + c2 + c3 + c4), args = list(family = "binomial"))
 )
