@@ -23,4 +23,4 @@ The paper reanalyzes the 2003 U.S. birth certificate data used in VanderWeele et
 ## Instructions:
 
 1. Install the [`MedSim`](https://github.com/JesseZhou-1/medsim) package in R for parametric causal mediation analysis.
-2. Install the [`MedFlow`](https://github.com/JesseZhou-1/medflow) package in Python for causal mediation analysis using cGNF.
+2. Install the [`MedFlow`](https://github.com/JesseZhou-1/medflow) package in Python for causal mediation analysis using Normalizing flows and UMNNs.
