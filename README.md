@@ -10,17 +10,25 @@ The paper reanalyzes the 2003 U.S. birth certificate data used in VanderWeele et
 - The **media framing experiment data** can be downloaded here: [Download Data](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/OU6D17)
 
 
-## Files and Descriptions:
+## Files and descriptions:
 
-- **`clean.R`**: Script to clean the raw dataset for analysis.
-- **`deq.py`**: Generates the dequantized data using cGNF for Figure 6.
-- **`normalizing.py`**: Transforms the data into a standard Gaussian distribution using cGNF for Figure 6.
-- **`transformation_plot.py`**: Combines the plots of the original, dequantized, and transformed data for Figure 6.
-- **`medsim_replication.R`**: Performs parametric causal mediation analysis to replicate results in Table 1.
-- **`medsimGNF_replication.R`**: Executes causal mediation analysis using cGNF to replicate results in Table 2.
-- **`sensitivity.py`**: Conducts sensitivity analysis using cGNF to replicate results in Table 2.
+- **`Table_1.R`**: Performs parametric causal mediation analysis to replicate the results in Table 1.
+
+### Folder: `Table_2`
+Contains scripts to replicate results in Table 2.
+
+- **`clean.R`**: Cleans the raw dataset for analysis.
+- **`Parametric.R`**: Performs parametric causal mediation analysis to replicate the results in the first column.
+- **`UMNNs.py`**: Performs causal mediation analysis using normalizing flows and UMNNs to replicate the results in the second column.
+
+### Folder: `Figure_4`
+Contains scripts for replicating the plots in Figure 4.
+
+- **`deq.py`**: Generates the dequantized data from the original data with normalizing flows .
+- **`normalizing.py`**: Transforms the original data into a standard Gaussian distribution with normalizing flows.
+- **`transformation_plot.py`**: Plots the final figure.
 
 ## Instructions:
 
 1. Install the [`MedSim`](https://github.com/JesseZhou-1/medsim) package in R for parametric causal mediation analysis.
-2. Install the [`MedFlow`](https://github.com/JesseZhou-1/medflow) package in Python for causal mediation analysis using Normalizing flows and UMNNs.
+2. Install the [`MedFlow`](https://github.com/JesseZhou-1/medflow) package in Python for causal mediation analysis using normalizing flows and UMNNs.
