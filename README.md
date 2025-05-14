@@ -25,8 +25,8 @@ Contains scripts to replicate results in Table 2.
 ### Folder: `Figure_4`
 Contains scripts for replicating the plots in Figure 4.
 
-- **`deq.py`**: Generates the dequantized data from the original data with normalizing flows .
-- **`normalizing.py`**: Transforms the original data into a standard Gaussian distribution with normalizing flows.
+- **`Dequantization.py`**: Generates the dequantized data from the original data with normalizing flows .
+- **`Normalizing.py`**: Transforms the original data into a standard Gaussian distribution with normalizing flows.
 - **`transformation_plot.py`**: Plots the final figure.
 
 ## Instructions:
