@@ -18,8 +18,9 @@ The paper reanalyzes the 2003 U.S. birth certificate data used in VanderWeele et
 Contains scripts to replicate results in Table 2.
 
 - **`clean.R`**: Cleans the raw dataset for analysis.
-- **`Parametric.R`**: Performs parametric causal mediation analysis to replicate the results in the first column.
-- **`UMNNs.py`**: Performs causal mediation analysis using normalizing flows and UMNNs to replicate the results in the second column.
+- **`UMNNs.py`**: Performs causal mediation analysis using normalizing flows and UMNNs to replicate the results in the first column.
+- **`Parametric.R`**: Performs parametric causal mediation analysis to replicate the results in the second column.
+
 
 ### Folder: `Figure_4`
 Contains scripts for replicating the plots in Figure 4.
