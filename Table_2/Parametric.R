@@ -21,12 +21,12 @@ model_spec <- list(
 )
 
 # Path-specific Effects
-medsim_core(data=mydata, num_sim = 2000,
-            cat_list = c("0", "1"), treatment = "a",
-            intv_med = NULL, model_spec = model_spec)
+medsim(data=mydata, num_sim = 2000,
+        cat_list = c("0", "1"), treatment = "a",
+        intv_med = NULL, model_spec = model_spec)
 
 # Interventional Effects
-medsim_core(data=mydata, num_sim = 2000,
-            cat_list = c("0", "1"), treatment = "a",
-            intv_med = ("m"), model_spec = model_spec)
+medsim(data=mydata, num_sim = 2000,
+        cat_list = c("0", "1"), treatment = "a",
+        intv_med = ("m"), model_spec = model_spec)
 
