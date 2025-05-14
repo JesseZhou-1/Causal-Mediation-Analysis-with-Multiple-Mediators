@@ -27,7 +27,7 @@ Contains scripts for replicating the plots in Figure 4.
 
 - **`Dequantization.py`**: Generates the dequantized data from the original data with normalizing flows .
 - **`Normalizing.py`**: Transforms the original data into a standard Gaussian distribution with normalizing flows.
-- **`transformation_plot.py`**: Plots the final figure.
+- **`Plot.py`**: Plots the final figure.
 
 ## Instructions:
 
