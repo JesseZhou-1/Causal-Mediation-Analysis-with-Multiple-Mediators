@@ -1,8 +1,6 @@
 library(readr)
 library(dplyr)
-library(medsim)
-
-# devtools::install_local("~/Desktop/medsim")
+source("https://raw.githubusercontent.com/causalMedAnalysis/causalMedR/refs/heads/main/medsim.R")
 
 load("Brader_et_al2008.RData")
 
