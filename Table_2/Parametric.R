@@ -1,6 +1,6 @@
 library(readr)
 library(dplyr)
-
+source("https://raw.githubusercontent.com/causalMedAnalysis/causalMedR/refs/heads/main/medsim.R")
 
 mydata <- read_csv("cleaned_natl2003_bin.csv")
 
