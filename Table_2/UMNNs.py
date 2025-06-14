@@ -32,7 +32,7 @@ sim_med(path=path, dataset_name=dataset_name, model_name=path + 'seed_1', n_mce_
         cat_list=[0, 1], moderator=None)
 
 # Interventional effects
-sim_med(path=path, dataset_name=dataset_name, model_name=path + 'seed_1', n_mce_samples=100000, mediator=["m=intv"], seed=1, inv_datafile_name='1_intv_100k',
+sim_med(path=path, dataset_name=dataset_name, model_name=path + 'seed_1', n_mce_samples=100000, intv_med=["m=intv"], seed=1, inv_datafile_name='1_intv_100k',
         cat_list=[0, 1], moderator=None)
 
 end_time = time.time()
