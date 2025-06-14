@@ -4,11 +4,7 @@ import os
 os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 import collections.abc
 collections.Iterable = collections.abc.Iterable
-import networkx as nx
-from causalgraphicalmodels import CausalGraphicalModel
-from processing import process
-from training import train
-from simulation import sim
+from medflow import train_med, sim_med
 import time
 
 start_time = time.time()
@@ -22,8 +18,7 @@ if not (os.path.isdir(path)):  # checks if a directory with the name 'path' exis
     os.makedirs(path)  # if not, creates a new directory with this name. This is where the logs and model weights will be saved.
 
 ## MODEL TRAINING
-from trainMed import trainMed
-trainMed(path=path, dataset_name=dataset_name, treatment='a', confounder=["c1", "c2", "c3", "c4"], mediator=["l", "m"], outcome='y',
+train_med(path=path, dataset_name=dataset_name, treatment='a', confounder=["c1", "c2", "c3", "c4"], mediator=["l", "m"], outcome='y',
            test_size=0.2, cat_var=["a", "l", "m", "y", "c1", "c2", "c3", "c4"], sens_corr=None, seed_split=1,
            model_name=path + 'seed_1',
            trn_batch_size=128, val_batch_size=4096, learning_rate=1e-4, seed=1,
@@ -32,14 +27,12 @@ trainMed(path=path, dataset_name=dataset_name, treatment='a', confounder=["c1", 
            int_net=[60, 50, 40, 30, 20])
 
 ## EFFECT ESTIMATION
-from simMed import simMed
-
 # Path-specific effects
-simMed(path=path, dataset_name=dataset_name, model_name=path + 'seed_1', n_mce_samples=100000, seed=1, inv_datafile_name='1_path_100k',
+sim_med(path=path, dataset_name=dataset_name, model_name=path + 'seed_1', n_mce_samples=100000, seed=1, inv_datafile_name='1_path_100k',
         cat_list=[0, 1], moderator=None)
 
 # Interventional effects
-simMed(path=path, dataset_name=dataset_name, model_name=path + 'seed_1', n_mce_samples=100000, mediator=["m=intv"], seed=1, inv_datafile_name='1_intv_100k',
+sim_med(path=path, dataset_name=dataset_name, model_name=path + 'seed_1', n_mce_samples=100000, mediator=["m=intv"], seed=1, inv_datafile_name='1_intv_100k',
         cat_list=[0, 1], moderator=None)
 
 end_time = time.time()
