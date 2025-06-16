@@ -31,5 +31,5 @@ Contains scripts for replicating the plots in Figure 4.
 
 ## Instructions:
 
-1. Install the [`MedSim`](https://github.com/causalMedAnalysis/causalMedR) package in R for parametric causal mediation analysis.
+1. Install the [`MedSim`](https://github.com/causalMedAnalysis/causalMedR/blob/main/medsim.R) package in R for parametric causal mediation analysis.
 2. Install the [`MedFlow`](https://github.com/JesseZhou-1/medflow) package in Python for causal mediation analysis using normalizing flows and UMNNs.
