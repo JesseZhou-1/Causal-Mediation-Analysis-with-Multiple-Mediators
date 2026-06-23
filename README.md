@@ -26,8 +26,8 @@ The paper reanalyzes the 2003 U.S. birth certificate data used in VanderWeele et
 #### Folder: `Table 7`
 
 - **`Clean.R`**: cleans and prepares the linked birth-certificate data.
-- **`UMNNs.py`**: runs the parametric simulation estimator.
-- **`Parametric.R`**: runs the normalizing-flow / UMNN specification.
+- **`UMNNs.py`**: runs the normalizing-flow / UMNN specification.
+- **`Parametric.R`**: runs the parametric simulation estimator.
 
 #### Folder: `Figure_4`
 
