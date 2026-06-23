@@ -17,11 +17,11 @@ The paper reanalyzes the 2003 U.S. birth certificate data used in VanderWeele et
 
 ### Folder: `Immigration`
 
-- **`Table_6.R`**: replicates the empirical results for the media-framing application reported in Table 6 of the manuscript.`
+- **`Table_6.R`**: replicates the empirical results for the media-framing application reported in Table 6 of the manuscript.
 
 ### Folder: `Preterm Birth`
 
-#### Folder: `Table 7`
+#### Folder: `Table_7`
 
 - **`Clean.R`**: cleans and prepares the linked birth-certificate data.
 - **`UMNNs.py`**: runs the normalizing-flow / UMNN specification.
@@ -35,7 +35,7 @@ The paper reanalyzes the 2003 U.S. birth certificate data used in VanderWeele et
 
 ### Folder: `Monte Carlo`
 
-#### Floder: `auxiliary`
+#### Folder: `auxiliary`
 
 This subfolder contains shared estimator implementations and support functions used across experiments, including:
 
@@ -49,20 +49,19 @@ This subfolder contains shared estimator implementations and support functions u
 
 #### Experiment folders
 
-`exp1`-`exp5` contain scripts used to replicate Experiment 1-5. Within these folders:
+`exp1`-`exp5` contain scripts used to replicate Experiments 1-5. Within these folders:
 
 * `run_exp*.R` scripts are stand-alone R drivers for local checking, development, and smaller-scale runs;
 * `mc_*_worker.*` scripts are worker scripts used for larger Monte Carlo runs;
 * `aggregate_results_*.R` scripts combine replication-level outputs and compute bias and RMSE summaries;
-* `run_mc_*.sbatch and run_mc_*.sh` scripts are SLURM/HPC launch scripts used for cluster execution.
+* `run_mc_*.sbatch` and `run_mc_*.sh` scripts are SLURM/HPC launch scripts used for cluster execution.
   
 Experiment 4 combines R-based estimators with a Python MedFlow workflow. Experiment 5 compares MedFlow hyperparameter variants using the Experiment 4 design.
 
 ## Attribution and Provenance
 
 Parts of the auxiliary function code build on earlier causal mediation replication code associated with:
-* the repFiles repository for Causal Mediation Analysis: https://github.com/causalMedAnalysis/repFiles/tree/50e575f284b2312d7c4189f33a69472a53e1ca1c
-* the accompanying book: https://www.cambridge.org/us/universitypress/subjects/social-science-research-methods/quantitative-methods/causal-mediation-analysis
+* the repFiles repository for [Causal Mediation Analysis](https://www.cambridge.org/us/universitypress/subjects/social-science-research-methods/quantitative-methods/causal-mediation-analysis): https://github.com/causalMedAnalysis/repFiles/
 
 The regression-imputation code in `Monte Carlo/auxiliary/pathimp.R` depends on the `paths` package. To reproduce the Monte Carlo results in this repository, users should install the modified fork used for this project:
 
