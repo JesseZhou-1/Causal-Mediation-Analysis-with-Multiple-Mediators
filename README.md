@@ -60,8 +60,7 @@ Experiment 4 combines R-based estimators with a Python MedFlow workflow. Experim
 
 ## Attribution and Provenance
 
-Parts of the auxiliary function code build on earlier causal mediation replication code associated with:
-* the repFiles repository for [Causal Mediation Analysis](https://www.cambridge.org/us/universitypress/subjects/social-science-research-methods/quantitative-methods/causal-mediation-analysis): https://github.com/causalMedAnalysis/repFiles/
+Parts of the auxiliary function code build on earlier causal mediation replication code associated with the `repFiles` repository for [Causal Mediation Analysis](https://www.cambridge.org/us/universitypress/subjects/social-science-research-methods/quantitative-methods/causal-mediation-analysis): <https://github.com/causalMedAnalysis/repFiles/>.
 
 The regression-imputation code in `Monte Carlo/auxiliary/pathimp.R` depends on the `paths` package. To reproduce the Monte Carlo results in this repository, users should install the modified fork used for this project:
 
@@ -69,6 +68,6 @@ The regression-imputation code in `Monte Carlo/auxiliary/pathimp.R` depends on t
 devtools::install_github("JesseZhou-1/paths")
 ```  
 
-original upstream repository of the `paths` package can be found [here](https://github.com/xiangzhou09/paths).
+he original upstream repository for the paths package can be found [here](https://github.com/xiangzhou09/paths).
 
 The normalizing-flow code in `Preterm Birth/Table_7/UMNNs.py` and `Monte Carlo/exp4/` through `Monte Carlo/exp5/` depends on the `MedFlow` package. To reproduce those results, users should install the Python package from <https://github.com/JesseZhou-1/medflow>.
