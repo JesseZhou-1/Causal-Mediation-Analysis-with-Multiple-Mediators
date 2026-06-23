@@ -1,8 +1,6 @@
 # Causal Mediation Analysis with Multiple Mediators: A Simulation Approach
 
-This repository contains the replication files for the paper **"Causal Mediation Analysis with Multiple Mediators: A Simulation Approach"**.
-
-The repository includes code and data for:
+This repository contains the replication files for the paper **"Causal Mediation Analysis with Multiple Mediators: A Simulation Approach"**. The code includes:
 
 1. the empirical application on media framing and immigration attitudes in the `Immigration` folder;
 2. the empirical application on prenatal care and preterm birth in the `Preterm Birth` folder; and
@@ -60,13 +58,18 @@ This subfolder contains shared estimator implementations and support functions u
   
 Experiment 4 combines R-based estimators with a Python MedFlow workflow. Experiment 5 compares MedFlow hyperparameter variants using the Experiment 4 design.
 
-### Attribution and Provenance
+## Attribution and Provenance
+
 Parts of the auxiliary function code build on earlier causal mediation replication code associated with:
 * the repFiles repository for Causal Mediation Analysis: https://github.com/causalMedAnalysis/repFiles/tree/50e575f284b2312d7c4189f33a69472a53e1ca1c
 * the accompanying book: https://www.cambridge.org/us/universitypress/subjects/social-science-research-methods/quantitative-methods/causal-mediation-analysis
+
+The regression-imputation code in `Monte Carlo/auxiliary/pathimp.R` depends on the `paths` package. To reproduce the Monte Carlo results in this repository, users should install the modified fork used for this project:
+
+```r
+devtools::install_github("JesseZhou-1/paths")
+```
   
-The regression-imputation code also relies on a modified version of the paths package. Relevant upstream sources are:
-* modified fork used for this project: https://github.com/JesseZhou-1/paths
 * original upstream repository: https://github.com/xiangzhou09/paths
 
-The normalizing-flow code requires the installation of the [`MedFlow`](https://github.com/JesseZhou-1/medflow) package in Python.
+The normalizing-flow code in `Preterm Birth/Table_7/UMNNs.py` and `Monte Carlo/exp4/` through `Monte Carlo/exp5/` depends on the `MedFlow` package. To reproduce those results, users should install the Python package from <https://github.com/JesseZhou-1/medflow>.
