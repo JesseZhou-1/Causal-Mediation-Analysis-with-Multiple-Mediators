@@ -69,6 +69,6 @@ The regression-imputation code in `Monte Carlo/auxiliary/pathimp.R` depends on t
 devtools::install_github("JesseZhou-1/paths")
 ```  
 
-he original upstream repository for the paths package can be found [here](https://github.com/xiangzhou09/paths).
+The original upstream repository for the paths package can be found [here](https://github.com/xiangzhou09/paths).
 
 The normalizing-flow code in `Preterm Birth/Table_7/UMNNs.py` and `Monte Carlo/exp4/` through `Monte Carlo/exp5/` depends on the `MedFlow` package. To reproduce those results, users should install the Python package from <https://github.com/JesseZhou-1/medflow>.
