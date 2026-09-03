@@ -15,26 +15,24 @@ import os
 import shutil
 import sys
 import traceback
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-try:
-    from medsim_mc.mc_exp4_py_worker import (
-        CAT_LIST,
-        _coerce_result_df,
-        _extract_effects,
-        _extract_intv_from_potential_outcomes,
-        _extract_pse_from_potential_outcomes,
-    )
-except ImportError:
-    from mc_exp4_py_worker import (
-        CAT_LIST,
-        _coerce_result_df,
-        _extract_effects,
-        _extract_intv_from_potential_outcomes,
-        _extract_pse_from_potential_outcomes,
-    )
+SCRIPT_DIR = Path(__file__).resolve().parent
+EXP4_DIR = SCRIPT_DIR.parent / "exp4"
+if not (EXP4_DIR / "mc_exp4_py_worker.py").exists():
+    EXP4_DIR = SCRIPT_DIR
+sys.path.insert(0, str(EXP4_DIR))
+
+from mc_exp4_py_worker import (  # noqa: E402
+    CAT_LIST,
+    _coerce_result_df,
+    _extract_effects,
+    _extract_intv_from_potential_outcomes,
+    _extract_pse_from_potential_outcomes,
+)
 
 
 DEFAULT_CONFIG = {

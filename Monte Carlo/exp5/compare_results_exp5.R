@@ -2,12 +2,13 @@
 
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args) < 3) {
-  stop("Usage: Rscript compare_results_exp5.R <exp4_output_dir> <exp5_root_dir> <n_reps>")
+  stop("Usage: Rscript compare_results_exp5.R <exp4_output_dir> <exp5_root_dir> <n_reps> [result_prefix]")
 }
 
 exp4_output_dir <- args[1]
 exp5_root_dir <- args[2]
 n_reps <- as.integer(args[3])
+result_prefix <- if (length(args) >= 4) args[4] else "medflow"
 
 script_arg <- grep("^--file=", commandArgs(FALSE), value = TRUE)
 script_path <- if (length(script_arg) > 0) normalizePath(sub("^--file=", "", script_arg[1])) else normalizePath("compare_results_exp5.R")
@@ -71,14 +72,27 @@ compute_paired_delta <- function(default_df, variant_df, variant_name, group_nam
   }))
 }
 
-default_df <- load_medflow_results(exp4_output_dir, max_rep_id = n_reps)
+default_df <- load_medflow_results(
+  exp4_output_dir,
+  max_rep_id = n_reps,
+  result_prefix = result_prefix
+)
 if (nrow(default_df) == 0) {
-  stop("No default medflow results found in exp4 output directory.")
+  stop(sprintf(
+    "No default results with prefix '%s' found in exp4 output directory.",
+    result_prefix
+  ))
+}
+
+default_run_label <- if (identical(result_prefix, "medflow")) {
+  "default_exp4_first240"
+} else {
+  paste0("default_exp4_", sub("^medflow_", "", result_prefix), "_first240")
 }
 
 run_results <- list(
   list(
-    run = "default_exp4_first240",
+    run = default_run_label,
     variant = "default",
     group = "default",
     setting = "baseline",
@@ -94,7 +108,11 @@ for (i in seq_len(nrow(variant_table))) {
     next
   }
 
-  variant_df <- load_medflow_results(variant_dir, max_rep_id = n_reps)
+  variant_df <- load_medflow_results(
+    variant_dir,
+    max_rep_id = n_reps,
+    result_prefix = result_prefix
+  )
   if (nrow(variant_df) == 0) {
     next
   }
@@ -181,6 +199,7 @@ summary_list <- list(
   exp4_output_dir = exp4_output_dir,
   exp5_root_dir = exp5_root_dir,
   n_reps = n_reps,
+  result_prefix = result_prefix,
   true_pse = true_pse,
   true_intv = true_intv,
   run_results = run_results,

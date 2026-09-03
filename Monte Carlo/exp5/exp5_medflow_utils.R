@@ -1,4 +1,8 @@
-find_medflow_result_files <- function(output_dir) {
+find_medflow_result_files <- function(output_dir, result_prefix = "medflow") {
+  if (!grepl("^[A-Za-z0-9_]+$", result_prefix)) {
+    stop("result_prefix may contain only letters, numbers, and underscores")
+  }
+
   candidate_dirs <- c(output_dir, file.path(output_dir, "rep_results"))
   candidate_dirs <- candidate_dirs[dir.exists(candidate_dirs)]
 
@@ -6,10 +10,13 @@ find_medflow_result_files <- function(output_dir) {
     return(character(0))
   }
 
+  result_pattern <- paste0("^", result_prefix, "_rep_[0-9]+\\.csv$")
+  rep_id_pattern <- paste0("^", result_prefix, "_rep_([0-9]+)\\.csv$")
+
   files <- unlist(lapply(candidate_dirs, function(dir_path) {
     list.files(
       dir_path,
-      pattern = "^medflow_rep_[0-9]+\\.csv$",
+      pattern = result_pattern,
       full.names = TRUE
     )
   }), use.names = FALSE)
@@ -21,7 +28,7 @@ find_medflow_result_files <- function(output_dir) {
 
   file_tbl <- data.frame(
     path = files,
-    rep_id = as.integer(sub("^medflow_rep_([0-9]+)\\.csv$", "\\1", basename(files))),
+    rep_id = as.integer(sub(rep_id_pattern, "\\1", basename(files))),
     mtime = file.info(files)$mtime,
     in_rep_results = basename(dirname(files)) == "rep_results",
     stringsAsFactors = FALSE
@@ -33,8 +40,8 @@ find_medflow_result_files <- function(output_dir) {
   file_tbl$path
 }
 
-load_medflow_results <- function(output_dir, max_rep_id = Inf) {
-  medflow_files <- find_medflow_result_files(output_dir)
+load_medflow_results <- function(output_dir, max_rep_id = Inf, result_prefix = "medflow") {
+  medflow_files <- find_medflow_result_files(output_dir, result_prefix = result_prefix)
   if (length(medflow_files) == 0) {
     return(data.frame(rep_id = integer()))
   }

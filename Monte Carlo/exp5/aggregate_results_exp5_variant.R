@@ -2,12 +2,13 @@
 
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args) < 3) {
-  stop("Usage: Rscript aggregate_results_exp5_variant.R <output_dir> <n_reps> <variant_name>")
+  stop("Usage: Rscript aggregate_results_exp5_variant.R <output_dir> <n_reps> <variant_name> [result_prefix]")
 }
 
 output_dir <- args[1]
 n_reps <- as.integer(args[2])
 variant_name <- args[3]
+result_prefix <- if (length(args) >= 4) args[4] else "medflow"
 
 script_arg <- grep("^--file=", commandArgs(FALSE), value = TRUE)
 script_path <- if (length(script_arg) > 0) normalizePath(sub("^--file=", "", script_arg[1])) else normalizePath("aggregate_results_exp5_variant.R")
@@ -21,9 +22,14 @@ source(file.path(script_dir, "exp5_medflow_utils.R"))
 
 cat("=", rep("=", 60), "\n", sep = "")
 cat(sprintf("Aggregating Experiment 5 Variant: %s\n", variant_name))
+cat(sprintf("Result prefix: %s\n", result_prefix))
 cat("=", rep("=", 60), "\n\n", sep = "")
 
-results_df <- load_medflow_results(output_dir, max_rep_id = n_reps)
+results_df <- load_medflow_results(
+  output_dir,
+  max_rep_id = n_reps,
+  result_prefix = result_prefix
+)
 observed_reps <- sort(unique(results_df$rep_id))
 missing_reps <- setdiff(seq_len(n_reps), observed_reps)
 
@@ -46,6 +52,7 @@ print(intv_stats, row.names = FALSE)
 
 summary_list <- list(
   variant_name = variant_name,
+  result_prefix = result_prefix,
   output_dir = output_dir,
   n_reps_expected = n_reps,
   n_reps_observed = nrow(results_df),

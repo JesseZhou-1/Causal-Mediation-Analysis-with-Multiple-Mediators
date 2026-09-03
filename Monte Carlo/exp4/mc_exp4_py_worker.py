@@ -13,6 +13,7 @@ Saves results to:    {output_dir}/rep_results/medflow_rep_{rep_id}.csv
 import sys
 import os
 import traceback
+import inspect
 import pandas as pd
 import numpy as np
 import re
@@ -26,6 +27,54 @@ def _rep_result_dir(output_dir):
     rep_result_dir = os.path.join(output_dir, "rep_results")
     os.makedirs(rep_result_dir, exist_ok=True)
     return rep_result_dir
+
+
+def _runtime_backend_info():
+    info = {
+        "medflow_path": None,
+        "medflow_error": None,
+        "cgnf_path": None,
+        "cgnf_train_signature": None,
+        "cgnf_error": None,
+        "has_spline_normalizer": False,
+        "spline_error": None,
+    }
+
+    try:
+        import medflow
+        info["medflow_path"] = getattr(medflow, "__file__", None)
+    except Exception as exc:
+        info["medflow_error"] = f"{type(exc).__name__}: {exc}"
+
+    try:
+        import cGNF
+        from cGNF import train as cgnf_train
+
+        info["cgnf_path"] = getattr(cGNF, "__file__", None)
+        info["cgnf_train_signature"] = str(inspect.signature(cgnf_train))
+    except Exception as exc:
+        info["cgnf_error"] = f"{type(exc).__name__}: {exc}"
+
+    try:
+        from cGNF.GNF_Modules.Normalizers import SplineNormalizer  # noqa: F401
+        info["has_spline_normalizer"] = True
+    except Exception as exc:
+        info["has_spline_normalizer"] = False
+        info["spline_error"] = f"{type(exc).__name__}: {exc}"
+
+    return info
+
+
+def report_runtime_backend(label="medflow"):
+    info = _runtime_backend_info()
+    print(f"[{label}] medflow path: {info['medflow_path']}")
+    print(f"[{label}] medflow import error: {info['medflow_error']}")
+    print(f"[{label}] cGNF path: {info['cgnf_path']}")
+    print(f"[{label}] cGNF train signature: {info['cgnf_train_signature']}")
+    print(f"[{label}] cGNF import error: {info['cgnf_error']}")
+    print(f"[{label}] SplineNormalizer available: {info['has_spline_normalizer']}")
+    print(f"[{label}] SplineNormalizer import error: {info['spline_error']}")
+    return info
 
 
 def _coerce_result_df(result_obj, rep_dir, inv_prefix):
@@ -235,12 +284,21 @@ def _extract_intv_from_potential_outcomes(df, rep_id):
         out["mf_intv_IIE"] = y_d - y_d_intv
     return out
 
-def run_one_rep(rep_id, output_dir):
+def run_one_rep(
+    rep_id,
+    output_dir,
+    train_kwargs=None,
+    result_prefix="medflow",
+    model_dir_name="models",
+    pse_prefix="pse",
+    intv_prefix="intv",
+):
     from medflow import train_med, sim_med
 
     rep_id = int(rep_id)
     rep_dir = os.path.join(output_dir, f"rep_{rep_id}")
     results = {"rep_id": rep_id}
+    train_kwargs = dict(train_kwargs or {})
 
     try:
         # ------------------------------------------------------------------
@@ -257,23 +315,26 @@ def run_one_rep(rep_id, output_dir):
         # 2) Train cGNF model
         # ------------------------------------------------------------------
         print(f"[Rep {rep_id}] Training medflow model...")
-        train_med(
-            path=rep_dir + "/",
-            dataset_name="data",
-            treatment="D",
-            mediator=["M1", "M2"],
-            outcome="Y",
-            confounder=["C"],
-            cat_var=["M1", "Y"],
-            nb_epoch=50000,
-            nb_estop=50,
-            trn_batch_size=128,
-            val_batch_size=2048,
-            learning_rate=1e-4,
-            seed=rep_id,
-            emb_net=[100, 90, 80, 70, 60],
-            int_net=[60, 50, 40, 30, 20],
-        )
+        default_train_kwargs = {
+            "path": rep_dir + "/",
+            "dataset_name": "data",
+            "model_name": model_dir_name,
+            "treatment": "D",
+            "mediator": ["M1", "M2"],
+            "outcome": "Y",
+            "confounder": ["C"],
+            "cat_var": ["M1", "Y"],
+            "nb_epoch": 50000,
+            "nb_estop": 50,
+            "trn_batch_size": 128,
+            "val_batch_size": 2048,
+            "learning_rate": 1e-4,
+            "seed": rep_id,
+            "emb_net": [100, 90, 80, 70, 60],
+            "int_net": [60, 50, 40, 30, 20],
+        }
+        default_train_kwargs.update(train_kwargs)
+        train_med(**default_train_kwargs)
         print(f"[Rep {rep_id}] Model training complete.")
 
         # ------------------------------------------------------------------
@@ -283,11 +344,12 @@ def run_one_rep(rep_id, output_dir):
         pse_result = sim_med(
             path=rep_dir + "/",
             dataset_name="data",
+            model_name=model_dir_name,
             cat_list=CAT_LIST,
             intv_med=None,
             n_mce_samples=5000,
             seed=rep_id,
-            inv_datafile_name="pse",
+            inv_datafile_name=pse_prefix,
         )
         print(f"[Rep {rep_id}] PSE simulation complete.")
 
@@ -298,13 +360,14 @@ def run_one_rep(rep_id, output_dir):
         intv_result = sim_med(
             path=rep_dir + "/",
             dataset_name="data",
+            model_name=model_dir_name,
             cat_list=CAT_LIST,
             intv_med=["M2=intv"],
             n_mce_samples=5000,
             seed=rep_id + 100000,
-            inv_datafile_name="intv",
+            inv_datafile_name=intv_prefix,
         )
-        intv_df = _coerce_result_df(intv_result, rep_dir, "intv")
+        intv_df = _coerce_result_df(intv_result, rep_dir, intv_prefix)
         if intv_df is None or intv_df.empty:
             raise RuntimeError(f"[Rep {rep_id}] Missing interventional medflow summary output.")
         print(f"[Rep {rep_id}] Interventional simulation complete.")
@@ -312,7 +375,7 @@ def run_one_rep(rep_id, output_dir):
         # ------------------------------------------------------------------
         # 5) Parse results (robust to medflow output schema changes)
         # ------------------------------------------------------------------
-        pse_df = _coerce_result_df(pse_result, rep_dir, "pse")
+        pse_df = _coerce_result_df(pse_result, rep_dir, pse_prefix)
         if pse_df is None or pse_df.empty:
             raise RuntimeError(f"[Rep {rep_id}] Missing PSE medflow summary output.")
         if pse_df is not None:
@@ -353,7 +416,7 @@ def run_one_rep(rep_id, output_dir):
     except Exception as e:
         err_dir = os.path.join(output_dir, "error_logs")
         os.makedirs(err_dir, exist_ok=True)
-        err_file = os.path.join(err_dir, f"medflow_rep_{rep_id}_error.log")
+        err_file = os.path.join(err_dir, f"{result_prefix}_rep_{rep_id}_error.log")
         with open(err_file, "w") as f:
             f.write(f"rep_id: {rep_id}\n")
             f.write(f"error: {str(e)}\n\n")
@@ -374,7 +437,7 @@ def run_one_rep(rep_id, output_dir):
     # ------------------------------------------------------------------
     rep_result_dir = _rep_result_dir(output_dir)
     results_df = pd.DataFrame([results])
-    out_path = os.path.join(rep_result_dir, f"medflow_rep_{rep_id}.csv")
+    out_path = os.path.join(rep_result_dir, f"{result_prefix}_rep_{rep_id}.csv")
     results_df.to_csv(out_path, index=False)
     print(f"[Rep {rep_id}] Results saved to {out_path}")
 
@@ -403,6 +466,7 @@ if __name__ == "__main__":
 
     print(f"Task {task_id} handling replications {start_rep} to {end_rep} ({len(my_reps)} total)")
     print(f"Using {n_cores} parallel processes")
+    report_runtime_backend("medflow")
 
     results = Parallel(n_jobs=n_cores)(
         delayed(run_one_rep)(rep_id, output_dir) for rep_id in my_reps
