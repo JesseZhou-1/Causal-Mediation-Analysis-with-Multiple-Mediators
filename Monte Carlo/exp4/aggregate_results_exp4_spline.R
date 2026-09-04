@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # ============================================================
-# Aggregate Monte Carlo Results for Experiment 4 (MedFlow-RQS)
+# Aggregate Monte Carlo Results for Experiment 4 (MedFlow-NRQS)
 # Nonlinear DGP: Count Treatment, Binary M1, Continuous M2, Ordinal Y
 #
 # Usage:
@@ -32,9 +32,9 @@ cat("=" , rep("=", 60), "\n", sep = "")
 if (phase == 1) {
   cat("Aggregating Experiment 4 - Phase 1 (R estimators only)\n")
 } else if (phase == 2) {
-  cat("Aggregating Experiment 4 - Phase 2 (adding MedFlow-RQS results)\n")
+  cat("Aggregating Experiment 4 - Phase 2 (adding MedFlow-NRQS results)\n")
 } else {
-  cat("Aggregating Experiment 4 - All Results (MedFlow-RQS)\n")
+  cat("Aggregating Experiment 4 - All Results (MedFlow-NRQS)\n")
 }
 cat("=" , rep("=", 60), "\n\n")
 
@@ -338,7 +338,7 @@ if (phase == 1) {
   pse_estimator_labels <- c("LIN", "IPW", "REG", "MED", "DML", "IPW-SL", "REG-SL")
 } else {
   pse_estimators <- c("lin", "ipw", "reg", "med", "dml", "ipw_sl", "reg_sl", "mf")
-    pse_estimator_labels <- c("LIN", "IPW", "REG", "MED", "DML", "IPW-SL", "REG-SL", "MedFlow-RQS")
+    pse_estimator_labels <- c("LIN", "IPW", "REG", "MED", "DML", "IPW-SL", "REG-SL", "MedFlow-NRQS")
 }
 pse_estimands <- c("ATE", "DY", "DM2Y", "DM1Y")
 pse_estimand_labels <- c("ATE", "D->Y", "D->M2->Y", "D->M1~>Y")
@@ -405,7 +405,7 @@ if (phase == 1) {
   intv_estimator_labels <- c("RWR", "MedSim")
 } else {
   intv_estimators <- c("rwr_intv", "med_intv", "mf_intv")
-  intv_estimator_labels <- c("RWR", "MedSim", "MedFlow-RQS")
+  intv_estimator_labels <- c("RWR", "MedSim", "MedFlow-NRQS")
 }
 intv_estimands <- c("OE", "IDE", "IIE")
 

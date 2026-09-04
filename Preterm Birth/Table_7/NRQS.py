@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fit the MedFlow-RQS model used in the preterm-birth application.
+"""Fit the MedFlow-NRQS model used in the preterm-birth application.
 
 Run ``Clean.R`` first so that ``cleaned_natl2003_bin.csv`` is available.
 By default, data and outputs are read from and written to this script's

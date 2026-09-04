@@ -13,7 +13,7 @@
 #SBATCH --error=mc_exp4_py_spline_%j.err
 
 # ============================================================
-# Experiment 4 - MedFlow-RQS (Python) estimator
+# Experiment 4 - MedFlow-NRQS (Python) estimator
 # Reads data CSVs from R job, trains cGNF-spline, estimates effects
 #
 # Usage: sbatch run_mc_exp4_py_spline.sbatch <R_OUTPUT_DIR>

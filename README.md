@@ -25,7 +25,7 @@ The paper reanalyzes the 2003 U.S. birth certificate data used in VanderWeele et
 
 - **`Clean.R`**: cleans and prepares the linked birth-certificate data.
 - **`UMNNs.py`**: runs the normalizing-flow / UMNN specification.
-- **`RQS.py`**: runs the normalizing-flow / rational-quadratic-spline specification.
+- **`NRQS.py`**: runs the normalizing-flow / neural rational-quadratic-spline specification.
 - **`Parametric.R`**: runs the parametric simulation estimator.
 
 #### Folder: `Figure_4`
